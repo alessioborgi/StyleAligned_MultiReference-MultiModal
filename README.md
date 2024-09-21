@@ -220,4 +220,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ### **Acknowledgments**
 
 We would like to thank **Google Research** for introducing the original concept of Style Alignment. A big thanks to my supervisors **Luca Maiano** and **Irene Amerini** for their unvaluable support in the process, and to my colleague **Francesco Danese** for the help in the original StyleAligned implementation that you can find here:
+
 **StyleAligned V1 (Basic)**: https://github.com/alessioborgi/StyleAligned.
