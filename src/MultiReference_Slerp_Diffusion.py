@@ -31,10 +31,10 @@ Diff_Inversion_Process_Callback = Callable[[StableDiffusionXLPipeline, int, T, d
 
 
 @torch.no_grad()
-def DDIM_Inversion_Process(model: StableDiffusionXLPipeline, x0: list[np.ndarray], blending_weights: list[float], prompt: str, num_inference_steps: int, guidance_scale,) -> T:
+def DDIM_Inversion_Process(model: StableDiffusionXLPipeline, x0: list[np.ndarray], blending_weights: list[float], prompt: str, num_inference_steps: int, guidance_scale, sa_args_list, normal_famous_scaling, handler) -> T:
 
     # 1) Encode Image: Encode the input image into a latent representation using the model's VAE.
-    encoded_img = images_encoding_slerp(model, x0, blending_weights)
+    encoded_img = images_encoding_slerp(model, x0, blending_weights, sa_args_list, normal_famous_scaling, handler)
 
     # 2) Set Timesteps: Set the timesteps for the diffusion process.
     model.scheduler.set_timesteps(num_inference_steps, device=encoded_img.device)
