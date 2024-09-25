@@ -15,7 +15,7 @@ import torch
 import numpy as np
 from src.Handler import Handler
 from diffusers import StableDiffusionXLPipeline
-from StyleAlignedArgs import StyleAlignedArgs
+from src.StyleAlignedArgs import StyleAlignedArgs
 
 
 def image_encoding(model: StableDiffusionXLPipeline, image: np.ndarray) -> T:
