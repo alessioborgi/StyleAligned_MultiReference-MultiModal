@@ -162,6 +162,35 @@ def weighted_slerp(weight, v0, v1):
 #     return blended_latent_img
 
 
+# 1) Normal Painting
+# These are some parameters you can Adjust to Control StyleAlignment to Reference Image.
+style_alignment_score_shift_normal = np.log(2)  # higher value induces higher fidelity, set 0 for no shift
+style_alignment_score_scale_normal = 1.0  # higher value induces higher, set 1 for no rescale
+
+# 2) Very Famous Paintings
+style_alignment_score_shift_famous = np.log(1)
+style_alignment_score_scale_famous = 0.5
+
+normal_sa_args = StyleAlignedArgs(
+    share_group_norm=True,
+    share_layer_norm=True,
+    share_attention=True,
+    adain_queries=True,
+    adain_keys=True,
+    adain_values=False,
+    style_alignment_score_shift=style_alignment_score_shift_normal,
+    style_alignment_score_scale=style_alignment_score_scale_normal)
+
+
+famous_sa_args = StyleAlignedArgs(
+    share_group_norm=True,
+    share_layer_norm=True,
+    share_attention=True,
+    adain_queries=True,
+    adain_keys=True,
+    adain_values=False,
+    style_alignment_score_shift=style_alignment_score_shift_famous,
+    style_alignment_score_scale=style_alignment_score_scale_famous)
 
 # Function to dynamically update and apply the style arguments
 def apply_style_aligned_args(handler, style_arg):
@@ -169,7 +198,7 @@ def apply_style_aligned_args(handler, style_arg):
 
 
 
-def images_encoding_slerp(model, images: list[np.ndarray], blending_weights: list[float], sa_args_list: list[StyleAlignedArgs], normal_famous_scaling: list[str], handler: Handler):
+def images_encoding_slerp(model, images: list[np.ndarray], blending_weights: list[float], normal_famous_scaling: list[str], handler: Handler):
     """
     Encode a list of images using the VAE model and blend their latent representations
     using Weighted Spherical Interpolation (slerp) according to the given blending_weights.
@@ -189,7 +218,6 @@ def images_encoding_slerp(model, images: list[np.ndarray], blending_weights: lis
     # Ensure the blending_weights sum to 1.
     assert len(images) == len(blending_weights), "The number of images and blending_weights must match."
     assert np.isclose(sum(blending_weights), 1.0), "blending_weights must sum to 1."
-    assert len(sa_args_list) == len(images), "You must provide exactly the same set of StyleAlignedArgs and number of images."
     assert len(normal_famous_scaling) == len(images), "The number of scaling classifications must match the number of images."
 
     # Set VAE to Float32 for encoding.
@@ -202,15 +230,13 @@ def images_encoding_slerp(model, images: list[np.ndarray], blending_weights: lis
     # Iterate over images and weights
     for idx, (img, weight, scaling_type) in enumerate(zip(images, blending_weights, normal_famous_scaling)):
         if weight > 0.0:
-            # Determine which StyleAlignedArgs to use (based on scaling_type)
-            style_args = sa_args_list[idx]  # Normal style or Famous style.
 
             print(f"Scaling Type: {scaling_type}")
             # Apply the style arguments dynamically
             if scaling_type == "n":
-                apply_style_aligned_args(handler, style_args.normal_style)
+                apply_style_aligned_args(handler, normal_sa_args)
             elif scaling_type == "f":
-                apply_style_aligned_args(handler, style_args.famous_style)
+                apply_style_aligned_args(handler, famous_sa_args)
             else:
                 raise ValueError(f"Invalid scaling type: {scaling_type}")
 
