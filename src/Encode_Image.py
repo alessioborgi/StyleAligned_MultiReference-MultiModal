@@ -205,8 +205,14 @@ def images_encoding_slerp(model, images: list[np.ndarray], blending_weights: lis
             # Determine which StyleAlignedArgs to use (based on scaling_type)
             style_args = sa_args_list[idx]  # Normal style or Famous style.
 
+            print(f"Scaling Type: {scaling_type}")
             # Apply the style arguments dynamically
-            apply_style_aligned_args(handler, style_args)
+            if scaling_type == "n":
+                apply_style_aligned_args(handler, style_args.normal_style)
+            elif scaling_type == "f":
+                apply_style_aligned_args(handler, style_args.famous_style)
+            else:
+                raise ValueError(f"Invalid scaling type: {scaling_type}")
 
             # Convert image to PyTorch tensor and normalize pixel values to [0, 1].
             scaled_image = torch.from_numpy(img).float() / 255.

@@ -15,6 +15,7 @@ Created on: July 6, 2024
 from __future__ import annotations
 import torch
 
+import numpy as np
 from tqdm import tqdm
 from typing import Callable
 from diffusers import StableDiffusionXLPipeline
