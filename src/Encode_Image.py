@@ -192,12 +192,6 @@ famous_sa_args = StyleAlignedArgs(
     style_alignment_score_shift=style_alignment_score_shift_famous,
     style_alignment_score_scale=style_alignment_score_scale_famous)
 
-# Function to dynamically update and apply the style arguments
-def apply_style_aligned_args(handler, style_arg):
-    handler.register(style_arg)
-
-
-
 def images_encoding_slerp(model, images: list[np.ndarray], blending_weights: list[float], normal_famous_scaling: list[str], handler: Handler):
     """
     Encode a list of images using the VAE model and blend their latent representations
@@ -221,7 +215,7 @@ def images_encoding_slerp(model, images: list[np.ndarray], blending_weights: lis
     assert len(normal_famous_scaling) == len(images), "The number of scaling classifications must match the number of images."
 
     # Set VAE to Float32 for encoding.
-    model.vae.to(dtype=torch.float32)
+    # model.vae.to(dtype=torch.float32)
 
     # Initialize variables to store valid latents and corresponding weights
     valid_latents = []
@@ -229,14 +223,16 @@ def images_encoding_slerp(model, images: list[np.ndarray], blending_weights: lis
 
     # Iterate over images and weights
     for idx, (img, weight, scaling_type) in enumerate(zip(images, blending_weights, normal_famous_scaling)):
+        
+        model.vae.to(dtype=torch.float32)
         if weight > 0.0:
 
             print(f"Scaling Type: {scaling_type}")
             # Apply the style arguments dynamically
             if scaling_type == "n":
-                apply_style_aligned_args(handler, normal_sa_args)
+                handler.register(normal_sa_args)
             elif scaling_type == "f":
-                apply_style_aligned_args(handler, famous_sa_args)
+                handler.register(famous_sa_args)
             else:
                 raise ValueError(f"Invalid scaling type: {scaling_type}")
 
@@ -248,13 +244,11 @@ def images_encoding_slerp(model, images: list[np.ndarray], blending_weights: lis
 
             # Encode image using VAE.
             latent_img = model.vae.encode(permuted_image.to(model.vae.device))['latent_dist'].mean * model.vae.config.scaling_factor
+            latent_img = model.vae.encode(permuted_image.to(model.vae.device))['latent_dist'].mean * model.vae.config.scaling_factor
 
             # Store valid latent and weight
             valid_latents.append(latent_img)
             valid_weights.append(weight)
-
-            # Unregister the handler after use (optional but recommended)
-            handler.remove()
 
     # Convert valid_weights to tensor and normalize them
     valid_weights = torch.tensor(valid_weights, device=model.vae.device, dtype=torch.float32)
