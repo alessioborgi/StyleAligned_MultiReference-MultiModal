@@ -78,16 +78,7 @@ In the following example, you can see the difference of StyleAlignment with and 
 	-	**Run**: Use this notebook to apply a reference style across multiple generated images, ensuring consistent style transfer.
 	-	**Command**: `jupyter notebook StyleAligned_with_Reference.ipynb`
 
-<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-    <div style="display: flex;">
-        <img src="imgs/ReadmeImports/original.png" alt="Image 1" style="width: 245px; margin-right: 10px;">
-        <img src="imgs/ReadmeImports/InversionTestMedieval.png" alt="Image 2" style="width: 245px; margin-right: 10px;">
-        <img src="imgs/ReadmeImports/saxophone.png" alt="Image 3" style="width: 245px; margin-right: 10px;">
-        <img src="imgs/ReadmeImports/pizza.png" alt="Image 4" style="width: 245px; margin-right: 0;">
-    </div>
-</div>
-<hr>
-Another couple of examples we have for the Reference Style are: 
+Some examples we have for the Reference Style are: 
 <div>
 <img src="imgs/ReadmeImports/StyleAligned_Reference.png" alt="Image 1" style="width: 800; margin-right: 100px;">
 </div>
