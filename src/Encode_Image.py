@@ -24,7 +24,8 @@ style_alignment_score_scale_normal = 1.0  # higher value induces higher, set 1 f
 
 # 2) Very Famous Paintings
 style_alignment_score_shift_famous = np.log(1)
-style_alignment_score_scale_famous = 0.5
+# style_alignment_score_scale_famous = 0.5
+style_alignment_score_scale_famous = 0.25
 
 normal_sa_args = StyleAlignedArgs(
     share_group_norm=True,
