@@ -1,15 +1,13 @@
 <a href="https://colab.research.google.com/github/alessioborgi/StyleAlignedDiffModels/blob/main/StyleAligned_Explanation.ipynb" target="_parent"><img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/></a>
 
-# A Multi-Reference Style and Multi-Modal Context-Awareness Zero-Shot Style Alignment for Image Generation
+# Z-SAMB: Zero-Shot Style-Aligned Multi-Reference Blending with Multi-Modal Content Fusion
 
-### Copyright © 2024 Alessio Borgi
+### Copyright © 2024 Alessio Borgi, Luca Maiano, Irene Amerini
 ### Paper: ...LOADING...
 
 ### **Abstract**
-This work introduces a novel framework for **Zero-Shot Style Alignment** in **Text-to-Image (T2I) Image Generation**, which integrates **Multi-Modal Content-Awareness** and **Multi-Reference Style Alignment**. Our method differs from traditional current T2I approaches, which excel in creating visually compelling images from textual descriptions, but they often struggle to maintain a consistent style across multiple images generated. To address this, they require extensive fine-tuning and manual intervention. Behind this framework, two important building blocks, **Shared Attention** and **Adaptive Instance Normalization (AdaIN)** enable consistent style alignment across multiple images while maintaining diversity and minimizing content leakage. 
-This work can be considered an extension of the **Google Research** [StyleAligned](https://arxiv.org/abs/2312.02133) work. We advanced the research by leveraging multiple content sources, such as images, audio, weather data, and music, to generate richer, multi-modal textual descriptions. By utilizing models like **BLIP-1**, **Whisper**, and **CLAP**, we enhance the diversity and contextual accuracy of the generated embeddings, employing also **T5 Summarization Model** for the final combined textual description if needed. For what concerns the **Multi-Reference Style Alignment**, we employ **Advanced Blending** techniques, including **Linear Weighted Blending** and **Spherical Interpolation (SLERP)**, to refine the multi-reference style alignment, allowing more than 1 reference style to influence the style contribution over the generated set of images.
-
-Finally, we introduce a ***new metric***, **Weighted Multi-Style DINO VIT-B/8**, to better evaluate the style blending process. Our framework demonstrates the ability to weight and combine various reference styles, enhancing the control and flexibility in generating stylistically consistent images from diverse inputs.
+We introduce Z-SAMB, a Zero-Shot Style-Aligned Conditioned Image Generation pipeline that addresses the limitations in current multi-style blending and evaluation methods and challenges in multi-modal content fusion. Existing approaches often struggle with seamlessly integrating multiple reference styles and lack robust metrics for assessing style consistency across generated images. Additionally, effectively fusing diverse content modalities remains a significant challenge. Our framework integrates Multi-Reference Style Alignment, enabling smooth blending of multiple reference styles through latent space manipulation without fine-tuning, ensuring high-fidelity style transitions and alignment in generated images. We introduce two techniques: Linear Weighted Blending and Spherical Linear Interpolation (SLERP), comprehensively comparing their effectiveness. We propose a new metric, Weighted Multi-Style DINO VIT-B/8, to evaluate multi-style consistency designed for scenarios involving multiple reference styles. Furthermore, our framework incorporates Multi-Modal Content Fusion, allowing the diffusion text encoder to leverage diverse content sources processed through a dedicated pipeline.
+We experimentally show that Z-SAMB ensures seamless multi-style transitions, enhanced style alignment, and consistent content integration. The novel metric, Weighted Multi-Style DINO VIT-B/8, effectively measures the coherence across blended styles, demonstrating the impact of our comprehensive framework.
 
 <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
     <div style="display: flex;">
@@ -20,33 +18,6 @@ Finally, we introduce a ***new metric***, **Weighted Multi-Style DINO VIT-B/8**,
     </div>
 </div>
 <hr>
-
-### **StyleAligned's Keypoints**
-
--   **Zero-Shot Style Alignment**: Achieve consistent style alignment without the need for optimization or fine-tuning.
--	**Minimal Attention Sharing**: Introduces attention sharing during the diffusion process for seamless style transfer.
--	**High-Quality Synthesis**: Maintains high fidelity to text prompts while ensuring stylistic coherence.
--	**Ease of Use**: Simplifies the process of generating a series of stylistically aligned images.
--   **Inversion Operation**: Used to apply reference styles, ensuring stylistic coherence.
-
-We propose three primary applications of StyleAligned:
-1.	**StyleAligned with Prompts Only**: Demonstrates the simplicity and effectiveness of achieving style alignment using only **Input Text Prompts**.
-2.	**StyleAligned with Reference Image**: Utilizes **Reference Images** to guide the style alignment process, ensuring consistent style transfer across multiple outputs, depending on it.
-3.	**StyleAligned with ControlNet**: Incorporates **ControlNet**, which can be provided with **Depth Images** or **Edge Images (Canny Images)**, to enhance control over the style alignment process.
-4.	**StyleAligned with Multi-Reference Images**: Utilizes **Multiple Reference Images** to guide the style alignment process, with the ability to blend them depending on a **Linear Weighted Interpolation** or a **Spherical Weighted Interpolation (SLERP Weighted)**.
-5.	**StyleAligned with Multi-Modal Context-Awareness**: Added the possibility to provide multiple content sources, such as images, audio, weather data, and music, to generate richer, multi-modal textual descriptions. 
-
-### **Related Work**
-S.O.T.A. solutions all need for **Fine-Tuning** a T2I Model, over a set of images that share the same style. From this, some **Drawbacks** like **Computationally Expensiveness** and **Human intervention**, are important requirements to find a plausible set of images and the need for lots of data. Other similar works come from [Style-Drop](https://arxiv.org/abs/2306.00983), which employs Adapter Tuning and Iterative Training with Feedback to fine-tune the T2I Model. Another is [Style-Fit](https://arxiv.org/abs/1906.02913) which is based on two-stage peer-regularization layers, leveraging geometric deep learning.
-
-Following [StyleAligned](https://arxiv.org/abs/2312.02133) approach, we show that high-quality, stylistically aligned image sets can be achieved with minimal intervention, enhancing the utility of T2I models for applications such as visual storytelling, artistic creation, and design. The method operates without the need for extensive optimization or fine-tuning, distinguishing it as a zero-shot solution. Evaluation across diverse styles and text prompts demonstrates the high-quality synthesis and fidelity of our method, underscoring its efficacy in achieving consistent style across various inputs. 
-
-### **Shared Attention and Adaptive Instance Normalization (AdaIN)**
-
-The **Shared Attention** Mechanism is an extension of the standard self-attention mechanism that allows for transferring style from a reference image to the rest of the images in the batch. While in **Standard Self-Attention**, the query attends to its own keys and values, we have that in ****Shared Attention**, the query not only attends to its own keys and values but also to those of a reference image. 
-
-**AdaIN** is used to align the feature statistics (mean and variance) of a target image to match those of a reference image, facilitating style transfer.
-The Final Outcome will be that the distribution (mean and standard deviation) of each target image’s query and key is aligned to match those of the reference image. This shared attention mechanism and AdaIN combine to allow the model to effectively transfer style across batches by utilizing key statistical information from a single reference image.
 
 ### **Installation**
 
